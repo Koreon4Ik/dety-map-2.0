@@ -10,7 +10,7 @@ const client = createClient({
 });
 
 export default async function LocationPage({ params }: { params: { id: string } }) {
-  // Запит GROQ, який витягує назву категорії через оператор ->
+  // ПРАВИЛЬНИЙ ЗАПИТ: ми використовуємо -> щоб дістати title з посилання
   const query = `*[_type == "location" && (_id == $id || slug.current == $id)][0]{
     title,
     address,
@@ -24,64 +24,81 @@ export default async function LocationPage({ params }: { params: { id: string } 
 
   if (!location) {
     return (
-      <div className="h-screen bg-slate-950 text-white flex items-center justify-center font-black uppercase italic">
-        Локацію не знайдено
+      <div className="h-screen bg-slate-950 text-white flex flex-col items-center justify-center space-y-4">
+        <h1 className="text-2xl font-black uppercase italic tracking-tighter">Локацію не знайдено</h1>
+        <Link href="/" className="text-yellow-400 font-bold hover:underline">Повернутися до мапи</Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-6 md:p-12 lg:p-24 flex justify-center">
+    <div className="min-h-screen bg-slate-950 text-white p-6 md:p-12 lg:p-24 flex justify-center selection:bg-yellow-400 selection:text-black">
       <div className="max-w-4xl w-full space-y-10">
         
-        <Link href="/" className="inline-flex items-center gap-2 text-slate-500 hover:text-yellow-400 transition-colors font-black uppercase text-xs tracking-widest group">
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Назад до мапи
+        {/* Кнопка назад */}
+        <Link href="/" className="inline-flex items-center gap-2 text-slate-500 hover:text-yellow-400 transition-all font-black uppercase text-[10px] tracking-[0.2em] group">
+          <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> 
+          Назад до мапи
         </Link>
 
         <div className="space-y-6">
+          {/* Плашка категорії */}
           <div className="flex items-center gap-3">
             <div 
-              className="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-black"
+              className="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-black shadow-lg"
               style={{ backgroundColor: location.categoryColor || '#fbbf24' }}
             >
-              {location.categoryName || 'Без категорії'}
+              {location.categoryName || 'Простір'}
             </div>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter leading-none">
+          {/* Заголовок */}
+          <h1 className="text-5xl md:text-8xl font-black italic uppercase tracking-tighter leading-[0.85] text-white">
             {location.title}
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-10 border-t border-white/5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-10 border-t border-white/10">
+          
+          {/* Контакти */}
           <div className="space-y-8">
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
-                <MapPin size={12} className="text-yellow-400" /> Адреса
+            <div className="space-y-3">
+              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 flex items-center gap-2">
+                <MapPin size={14} className="text-yellow-400" /> Розташування
               </label>
-              <p className="text-xl font-bold">{location.address}</p>
+              <p className="text-2xl font-bold leading-tight">{location.address}</p>
             </div>
 
             {location.link && (
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
-                  <Globe size={12} className="text-yellow-400" /> Веб-сайт / Соцмережі
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 flex items-center gap-2">
+                  <Globe size={14} className="text-yellow-400" /> Посилання
                 </label>
-                <a href={location.link} target="_blank" rel="noreferrer" className="text-xl font-bold text-yellow-400 hover:underline break-all">
-                  {location.link.replace('https://', '')}
+                <a 
+                  href={location.link} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="text-xl font-bold text-yellow-400 hover:text-white transition-colors break-all"
+                >
+                  {location.link.replace('https://', '').replace('www.', '')}
                 </a>
               </div>
             )}
           </div>
 
-          <div className="space-y-4 bg-white/5 p-8 rounded-[40px] border border-white/5 backdrop-blur-xl">
-            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
-              <AlignLeft size={12} className="text-yellow-400" /> Про простір
+          {/* Опис */}
+          <div className="space-y-4 bg-white/[0.03] p-8 md:p-10 rounded-[40px] border border-white/5 backdrop-blur-3xl shadow-2xl">
+            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 flex items-center gap-2">
+              <AlignLeft size={14} className="text-yellow-400" /> Про локацію
             </label>
-            <p className="text-slate-300 leading-relaxed font-medium">
-              {location.description}
+            <p className="text-slate-300 text-lg leading-relaxed font-medium italic">
+              {location.description || 'Опис скоро зʼявиться...'}
             </p>
           </div>
+        </div>
+
+        <div className="pt-10 opacity-20">
+          <p className="text-[10px] font-black uppercase tracking-[0.5em]">DeTy? Project x UYouth</p>
         </div>
       </div>
     </div>
