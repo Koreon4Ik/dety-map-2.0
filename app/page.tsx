@@ -102,8 +102,8 @@ export default function Home() {
       {/* HEADER BLOCK */}
       <div className="absolute top-4 md:top-6 left-1/2 -translate-x-1/2 z-[1000] w-[95%] max-w-[1400px] flex flex-col md:flex-row gap-3">
         
-        <div className={`${theme.panel} backdrop-blur-2xl border p-2.5 pr-6 rounded-[30px] ${isDark ? 'shadow-2xl' : 'shadow-[0_14px_40px_rgba(44,62,50,0.12)]'} flex items-center gap-4 shrink-0`}>
-          <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl overflow-hidden bg-white p-2 shadow-lg shadow-yellow-400/10 flex items-center justify-center">
+        <div className={`${theme.panel} backdrop-blur-2xl border p-2.5 pr-6 rounded-[30px] ${isDark ? 'shadow-2xl' : 'shadow-[0_14px_40px_rgba(44,62,50,0.12)] ring-1 ring-white/70'} flex items-center gap-4 shrink-0`}>
+          <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl overflow-hidden p-2 flex items-center justify-center ${isDark ? 'bg-white shadow-lg shadow-yellow-400/10' : 'bg-[#fbfaf4] ring-1 ring-amber-200/80 shadow-[0_5px_16px_rgba(190,150,50,0.16)]'}`}>
             <img src="/logo.PNG" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <div>

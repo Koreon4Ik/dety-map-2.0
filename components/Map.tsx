@@ -175,10 +175,10 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
           align-items: center;
           justify-content: center;
           border-radius: 50%;
-          background: ${isDark ? '#facc15' : '#111827'};
+          background: ${isDark ? '#facc15' : '#2f6f73'};
           color: ${isDark ? '#111827' : '#ffffff'};
           border: 4px solid ${isDark ? '#111827' : '#ffffff'};
-          box-shadow: 0 0 0 2px ${isDark ? '#facc15' : '#111827'}, 0 0 24px ${isDark ? '#facc1588' : '#11182766'};
+          box-shadow: 0 0 0 2px ${isDark ? '#facc15' : '#2f6f73'}, 0 0 24px ${isDark ? '#facc1588' : '#2f6f7366'};
           font-size: 20px;
           font-weight: 900;
           font-style: italic;
