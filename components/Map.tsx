@@ -55,10 +55,10 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
     iconAnchor: [15, 15]
   });
 
-  // Додаємо ?api_key= до URL тайлів
+  // Використовуємо параметр ?key= замість ?api_key= відповідно до вимог CARTO
   const tileUrl = isDark 
-    ? `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?api_key=${cartoApiKey}`
-    : `https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?api_key=${cartoApiKey}`;
+    ? `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${cartoApiKey}`
+    : `https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${cartoApiKey}`;
 
   return (
     <div className={`h-full w-full ${isDark ? 'bg-slate-950' : 'bg-slate-100'} transition-colors duration-500`}>
