@@ -210,7 +210,7 @@ export default function Home() {
 
                 {/* Telegram Bot Block */}
                 <a 
-                  href="https://t.me/UYouth_bot" 
+                  href="https://t.me/koreonovi4" 
                   target="_blank" 
                   rel="noreferrer" 
                   className="p-6 rounded-[32px] bg-gradient-to-br from-blue-600/20 to-cyan-600/20 border border-blue-500/20 text-left flex items-center justify-between group transition-transform hover:scale-[1.02]"
@@ -220,8 +220,8 @@ export default function Home() {
                       <Send size={24} />
                     </div>
                     <div>
-                      <h4 className="font-black uppercase text-xs mb-1 italic text-white text-stroke-none">Telegram Бот</h4>
-                      <p className="text-xs opacity-60 text-white/70">@UYouth_bot</p>
+                      <h4 className="font-black uppercase text-xs mb-1 italic text-white text-stroke-none">Адміністратор мапи</h4>
+                      <p className="text-xs opacity-60 text-white/70">@koreonovi4</p>
                     </div>
                   </div>
                   <Plus className="group-hover:rotate-90 transition-transform opacity-50 text-white" />
