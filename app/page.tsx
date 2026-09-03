@@ -87,13 +87,13 @@ export default function Home() {
   });
 
   const theme = {
-    bg: isDark ? 'bg-slate-950' : 'bg-slate-50',
-    panel: isDark ? 'bg-slate-900/90 border-white/10' : 'bg-white/95 border-slate-200',
+    bg: isDark ? 'bg-slate-950' : 'bg-[#f3f5f2]',
+    panel: isDark ? 'bg-slate-900/90 border-white/10' : 'bg-white/90 border-slate-200/80',
     text: isDark ? 'text-white' : 'text-slate-900',
     subtext: isDark ? 'text-slate-400' : 'text-slate-500',
-    input: isDark ? 'bg-white/5 border-white/5' : 'bg-slate-100 border-slate-200',
-    dropdown: isDark ? 'bg-slate-800 border-white/10' : 'bg-white border-slate-200',
-    card: isDark ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-200'
+    input: isDark ? 'bg-white/5 border-white/5' : 'bg-slate-100/80 border-slate-200/80',
+    dropdown: isDark ? 'bg-slate-800 border-white/10' : 'bg-white border-slate-200/80',
+    card: isDark ? 'bg-white/5 border-white/5' : 'bg-white/70 border-slate-200/80'
   };
 
   return (
@@ -102,7 +102,7 @@ export default function Home() {
       {/* HEADER BLOCK */}
       <div className="absolute top-4 md:top-6 left-1/2 -translate-x-1/2 z-[1000] w-[95%] max-w-[1400px] flex flex-col md:flex-row gap-3">
         
-        <div className={`${theme.panel} backdrop-blur-2xl border p-2.5 pr-6 rounded-[30px] shadow-2xl flex items-center gap-4 shrink-0`}>
+        <div className={`${theme.panel} backdrop-blur-2xl border p-2.5 pr-6 rounded-[30px] ${isDark ? 'shadow-2xl' : 'shadow-[0_14px_40px_rgba(44,62,50,0.12)]'} flex items-center gap-4 shrink-0`}>
           <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl overflow-hidden bg-white p-2 shadow-lg shadow-yellow-400/10 flex items-center justify-center">
             <img src="/logo.PNG" alt="Logo" className="w-full h-full object-contain" />
           </div>
@@ -119,7 +119,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className={`${theme.panel} backdrop-blur-2xl border p-2 rounded-[30px] flex flex-grow items-center gap-2 shadow-2xl`}>
+        <div className={`${theme.panel} backdrop-blur-2xl border p-2 rounded-[30px] flex flex-grow items-center gap-2 ${isDark ? 'shadow-2xl' : 'shadow-[0_14px_40px_rgba(44,62,50,0.12)]'}`}>
           <div className={`flex items-center gap-3 ${theme.input} border rounded-2xl px-4 py-2.5 flex-grow focus-within:border-yellow-400/50 transition-all`}>
             <Search size={18} className="text-slate-500" />
             <input 
@@ -134,7 +134,7 @@ export default function Home() {
             <button 
               onClick={() => setIsFilterOpen(!isFilterOpen)}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase transition-all ${
-                filter !== 'УСІ' ? 'bg-yellow-400 text-black shadow-lg shadow-yellow-400/20' : `${isDark ? 'bg-white/5 text-slate-300' : 'bg-slate-200 text-slate-700'}`
+                filter !== 'УСІ' ? 'bg-yellow-400 text-black shadow-lg shadow-yellow-400/20' : `${isDark ? 'bg-white/5 text-slate-300' : 'bg-slate-100 text-slate-700 border border-slate-200'}`
               }`}
             >
               <Filter size={14} className={filter !== 'УСІ' ? 'text-black' : 'text-yellow-500'} />
@@ -163,10 +163,10 @@ export default function Home() {
 
       {/* ABOUT MODAL */}
       {isAboutOpen && (
-        <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 md:p-6 bg-slate-950/60 backdrop-blur-xl animate-in fade-in duration-300">
+        <div className={`fixed inset-0 z-[2000] flex items-center justify-center p-4 md:p-6 ${isDark ? 'bg-slate-950/60' : 'bg-slate-900/25'} backdrop-blur-xl animate-in fade-in duration-300`}>
           <div className={`${isDark ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200'} border rounded-[48px] md:rounded-[60px] p-8 md:p-14 max-w-4xl w-full relative shadow-2xl overflow-y-auto max-h-[90vh] custom-scrollbar`}>
             
-            <button onClick={() => setIsAboutOpen(false)} className="absolute top-8 right-8 p-3 bg-white/5 rounded-full hover:bg-yellow-400 hover:text-black transition-all group">
+            <button onClick={() => setIsAboutOpen(false)} className={`absolute top-8 right-8 p-3 rounded-full hover:bg-yellow-400 hover:text-black transition-all group ${isDark ? 'bg-white/5' : 'bg-slate-100 text-slate-600'}`}>
               <X size={24} className="group-hover:rotate-90 transition-transform" />
             </button>
 
