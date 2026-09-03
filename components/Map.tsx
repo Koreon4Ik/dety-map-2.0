@@ -24,7 +24,7 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
   const cartoApiKey = process.env.NEXT_PUBLIC_CARTO_API_KEY || '';
   
   // Кастомна іконка для локацій
-  const createCustomIcon = (category: string) => {
+  const createCustomIcon = (category: string, categoryColor?: string) => {
     const colors: Record<string, string> = { 
       'МЦ': '#fbbf24',
       'NGO': '#34d399',
@@ -36,7 +36,7 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
       'ІНШЕ': '#94a3b8' 
     };
 
-    const color = colors[category?.toUpperCase()] || colors['ІНШЕ'];
+    const color = categoryColor || colors[category?.toUpperCase()] || colors['ІНШЕ'];
     const borderColor = isDark ? '#0f172a' : '#ffffff';
 
     return L.divIcon({
@@ -91,7 +91,7 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
             <Marker 
               key={loc._id} 
               position={[loc.coordinates.lat, loc.coordinates.lng]} 
-              icon={createCustomIcon(loc.category)}
+              icon={createCustomIcon(loc.category, loc.categoryColor)}
               eventHandlers={{
                 click: () => {
                   const target = loc.slug || loc._id;
