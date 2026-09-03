@@ -4,9 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createClient } from 'next-sanity';
 import { 
   Tag, ChevronDown, MapPin, Type, AlignLeft, Globe, CheckCircle2, 
-  Navigation, AlertCircle, ArrowLeft, Send 
+  Navigation, AlertCircle, ArrowLeft, Send, Plus
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const client = createClient({
@@ -17,7 +16,6 @@ const client = createClient({
 });
 
 export default function AddLocation() {
-  const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
   
   const [isCatOpen, setIsCatOpen] = useState(false);
@@ -59,6 +57,20 @@ export default function AddLocation() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      address: '',
+      lat: '',
+      lng: '',
+      description: '',
+      link: ''
+    });
+    setSelectedCat(null);
+    setStatus('idle');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const getMyLocation = () => {
     if (!navigator.geolocation) return alert("Геолокація не підтримується");
     navigator.geolocation.getCurrentPosition((pos) => {
@@ -87,7 +99,6 @@ export default function AddLocation() {
 
       if (res.ok) {
         setStatus('success');
-        setTimeout(() => router.push('/'), 3000);
       } else {
         setStatus('error');
       }
@@ -107,7 +118,16 @@ export default function AddLocation() {
           </div>
           <h2 className="text-3xl font-black uppercase italic text-white">Дякуємо!</h2>
           <p className="text-slate-400 font-bold max-w-sm mx-auto">Ваша пропозиція відправлена на модерацію. Скоро вона з'явиться на мапі.</p>
-          <Link href="/" className="inline-block text-yellow-400 font-black uppercase tracking-widest border-b-2 border-yellow-400 pb-1 hover:opacity-70 transition-opacity">Повернутись на головну</Link>
+          <div className="flex flex-col items-center gap-4">
+            <button
+              type="button"
+              onClick={resetForm}
+              className="inline-flex items-center gap-3 bg-yellow-400 text-black px-6 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-white transition-colors"
+            >
+              Додати ще одну мітку <Plus size={18} />
+            </button>
+            <Link href="/" className="text-yellow-400 font-black uppercase tracking-widest border-b-2 border-yellow-400 pb-1 hover:opacity-70 transition-opacity">Повернутись на головну</Link>
+          </div>
         </div>
       </div>
     );
