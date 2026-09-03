@@ -19,6 +19,9 @@ function MapController({ center, zoom }: { center: [number, number] | null, zoom
 
 export default function Map({ locations = [], center, zoom, isDark = true }: any) {
   const router = useRouter();
+
+  // Отримуємо API ключ із змінних оточення (збережених у Vercel)
+  const cartoApiKey = process.env.NEXT_PUBLIC_CARTO_API_KEY || '';
   
   // Кастомна іконка для локацій
   const createCustomIcon = (category: string) => {
@@ -52,9 +55,10 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
     iconAnchor: [15, 15]
   });
 
+  // Додаємо ?api_key= до URL тайлів
   const tileUrl = isDark 
-    ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-    : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
+    ? `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?api_key=${cartoApiKey}`
+    : `https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?api_key=${cartoApiKey}`;
 
   return (
     <div className={`h-full w-full ${isDark ? 'bg-slate-950' : 'bg-slate-100'} transition-colors duration-500`}>
@@ -81,7 +85,6 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
 
         {/* Маркери локацій із Sanity */}
         {locations.map((loc: any) => {
-          // Перевірка наявності координат, щоб мапа не падала
           if (!loc.coordinates?.lat || !loc.coordinates?.lng) return null;
 
           return (
@@ -91,7 +94,6 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
               icon={createCustomIcon(loc.category)}
               eventHandlers={{
                 click: () => {
-                  // Використовуємо slug або ID для переходу
                   const target = loc.slug || loc._id;
                   router.push(`/location/${target}`);
                 }
