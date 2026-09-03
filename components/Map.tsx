@@ -1,6 +1,7 @@
 "use client";
 
 import { MapContainer, TileLayer, Marker, useMap, ZoomControl, Tooltip } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -47,6 +48,18 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
     });
   };
 
+  const createClusterIcon = (cluster: { getChildCount: () => number }) => {
+    const count = cluster.getChildCount();
+    const size = count < 10 ? 54 : count < 50 ? 62 : 70;
+
+    return L.divIcon({
+      html: `<div class="marker-cluster-inner" style="width: ${size}px; height: ${size}px;">${count}</div>`,
+      className: 'marker-cluster',
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2]
+    });
+  };
+
   // Іконка користувача
   const userIcon = L.divIcon({
     className: 'user-marker',
@@ -84,34 +97,42 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
         )}
 
         {/* Маркери локацій із Sanity */}
-        {locations.map((loc: any) => {
-          if (!loc.coordinates?.lat || !loc.coordinates?.lng) return null;
+        <MarkerClusterGroup
+          chunkedLoading
+          showCoverageOnHover={false}
+          spiderfyOnMaxZoom
+          maxClusterRadius={70}
+          iconCreateFunction={createClusterIcon}
+        >
+          {locations.map((loc: any) => {
+            if (!loc.coordinates?.lat || !loc.coordinates?.lng) return null;
 
-          return (
-            <Marker 
-              key={loc._id} 
-              position={[loc.coordinates.lat, loc.coordinates.lng]} 
-              icon={createCustomIcon(loc.category, loc.categoryColor)}
-              eventHandlers={{
-                click: () => {
-                  const target = loc.slug || loc._id;
-                  router.push(`/location/${target}`);
-                }
-              }}
-            >
-              <Tooltip direction="top" offset={[0, -10]} opacity={1} sticky>
-                <div className="p-1 min-w-[100px]">
-                  <div className="font-black uppercase italic text-[12px] text-slate-900 leading-tight">
-                    {loc.title}
+            return (
+              <Marker
+                key={loc._id}
+                position={[loc.coordinates.lat, loc.coordinates.lng]}
+                icon={createCustomIcon(loc.category, loc.categoryColor)}
+                eventHandlers={{
+                  click: () => {
+                    const target = loc.slug || loc._id;
+                    router.push(`/location/${target}`);
+                  }
+                }}
+              >
+                <Tooltip direction="top" offset={[0, -10]} opacity={1} sticky>
+                  <div className="p-1 min-w-[100px]">
+                    <div className="font-black uppercase italic text-[12px] text-slate-900 leading-tight">
+                      {loc.title}
+                    </div>
+                    <div className="text-[10px] font-bold text-slate-500 uppercase mt-0.5 tracking-widest">
+                      {loc.category || 'ІНШЕ'}
+                    </div>
                   </div>
-                  <div className="text-[10px] font-bold text-slate-500 uppercase mt-0.5 tracking-widest">
-                    {loc.category || 'ІНШЕ'}
-                  </div>
-                </div>
-              </Tooltip>
-            </Marker>
-          );
-        })}
+                </Tooltip>
+              </Marker>
+            );
+          })}
+        </MarkerClusterGroup>
       </MapContainer>
 
       {/* Стилі для кастомних елементів мапи */}
@@ -144,6 +165,24 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
           padding: 8px 12px !important;
         }
         .leaflet-tooltip-top:before { border-top-color: white !important; }
+
+        .marker-cluster {
+          background: transparent;
+          border: none;
+        }
+        .marker-cluster-inner {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          background: ${isDark ? '#facc15' : '#111827'};
+          color: ${isDark ? '#111827' : '#ffffff'};
+          border: 4px solid ${isDark ? '#111827' : '#ffffff'};
+          box-shadow: 0 0 0 2px ${isDark ? '#facc15' : '#111827'}, 0 0 24px ${isDark ? '#facc1588' : '#11182766'};
+          font-size: 20px;
+          font-weight: 900;
+          font-style: italic;
+        }
       `}</style>
     </div>
   );
