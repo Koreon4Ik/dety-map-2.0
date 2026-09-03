@@ -194,18 +194,18 @@ export default function Home() {
                   href="https://www.instagram.com/child.youth.council/" 
                   target="_blank" 
                   rel="noreferrer" 
-                  className="p-6 rounded-[32px] bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-pink-500/20 text-left flex items-center justify-between group transition-transform hover:scale-[1.02]"
+                    className={`p-6 rounded-[32px] text-left flex items-center justify-between group transition-transform hover:scale-[1.02] ${isDark ? 'bg-gradient-to-br from-purple-600/20 to-pink-600/20 border-pink-500/20' : 'bg-gradient-to-br from-rose-50 to-pink-100 border-pink-200'}`}
                 >
                   <div className="flex items-center gap-4">
                     <div className="p-3 bg-gradient-to-tr from-yellow-400 to-pink-600 rounded-2xl text-white shadow-lg shadow-pink-500/20">
                       <LinkIcon size={24} />
                     </div>
                     <div>
-                      <h4 className="font-black uppercase text-xs mb-1 italic text-white text-stroke-none">Instagram</h4>
-                      <p className="text-xs opacity-60 text-white/70">@child.youth.council</p>
+                      <h4 className={`font-black uppercase text-xs mb-1 italic text-stroke-none ${isDark ? 'text-white' : 'text-slate-900'}`}>Instagram</h4>
+                      <p className={`text-xs ${isDark ? 'text-white/70' : 'text-slate-600'}`}>@child.youth.council</p>
                     </div>
                   </div>
-                  <Plus className="group-hover:rotate-90 transition-transform opacity-50 text-white" />
+                  <Plus className={`group-hover:rotate-90 transition-transform opacity-50 ${isDark ? 'text-white' : 'text-slate-700'}`} />
                 </a>
 
                 {/* Telegram Bot Block */}
@@ -213,18 +213,18 @@ export default function Home() {
                   href="https://t.me/koreonovi4" 
                   target="_blank" 
                   rel="noreferrer" 
-                  className="p-6 rounded-[32px] bg-gradient-to-br from-blue-600/20 to-cyan-600/20 border border-blue-500/20 text-left flex items-center justify-between group transition-transform hover:scale-[1.02]"
+                    className={`p-6 rounded-[32px] text-left flex items-center justify-between group transition-transform hover:scale-[1.02] ${isDark ? 'bg-gradient-to-br from-blue-600/20 to-cyan-600/20 border-blue-500/20' : 'bg-gradient-to-br from-sky-50 to-cyan-100 border-sky-200'}`}
                 >
                   <div className="flex items-center gap-4">
                     <div className="p-3 bg-gradient-to-tr from-blue-400 to-blue-600 rounded-2xl text-white shadow-lg shadow-blue-500/20">
                       <Send size={24} />
                     </div>
                     <div>
-                      <h4 className="font-black uppercase text-xs mb-1 italic text-white text-stroke-none">Адміністратор мапи</h4>
-                      <p className="text-xs opacity-60 text-white/70">@koreonovi4</p>
+                      <h4 className={`font-black uppercase text-xs mb-1 italic text-stroke-none ${isDark ? 'text-white' : 'text-slate-900'}`}>Адміністратор мапи</h4>
+                      <p className={`text-xs ${isDark ? 'text-white/70' : 'text-slate-600'}`}>@koreonovi4</p>
                     </div>
                   </div>
-                  <Plus className="group-hover:rotate-90 transition-transform opacity-50 text-white" />
+                  <Plus className={`group-hover:rotate-90 transition-transform opacity-50 ${isDark ? 'text-white' : 'text-slate-700'}`} />
                 </a>
 
                 {/* Who We Are - Full Width on Mobile */}
@@ -232,7 +232,7 @@ export default function Home() {
                   <div className="p-3 bg-blue-500/20 rounded-2xl text-blue-400 shrink-0"><Users size={24} /></div>
                   <div>
                     <h4 className="font-black uppercase text-xs mb-1">Хто ми?</h4>
-                    <p className="text-xs opacity-60 leading-relaxed italic text-slate-400 font-medium">Ініціатива відділу «Якісне дозвілля» Національної дитячої та молодіжної ради України за підтримки Terre des Hommes та рандниці-уповноваженої з питань дітей та дитячої реабілітації Дар'ї Герасимчук.</p>
+                    <p className={`text-xs leading-relaxed italic font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Ініціатива відділу «Якісне дозвілля» Національної дитячої та молодіжної ради України за підтримки Terre des Hommes та рандниці-уповноваженої з питань дітей та дитячої реабілітації Дар'ї Герасимчук.</p>
                   </div>
                 </div>
               </div>
