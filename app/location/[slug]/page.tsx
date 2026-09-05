@@ -2,6 +2,7 @@ import { MapPin, Globe, ArrowLeft, AlignLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { client } from '@/sanity/lib/client';
+import LocationActions from '@/components/LocationActions';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -14,6 +15,7 @@ export default async function LocationPage(props: { params: Promise<{ slug: stri
     address,
     description,
     link,
+    coordinates,
     "imageUrl": image.asset->url,
     "categoryName": category->title,
     "categoryColor": category->color
@@ -53,6 +55,12 @@ export default async function LocationPage(props: { params: Promise<{ slug: stri
             {location.title}
           </h1>
         </div>
+
+        <LocationActions
+          title={location.title}
+          address={location.address}
+          coordinates={location.coordinates}
+        />
 
         {location.imageUrl && (
           <div className="w-full aspect-video rounded-[40px] overflow-hidden border border-white/10 shadow-2xl">
