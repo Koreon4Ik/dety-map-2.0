@@ -135,7 +135,7 @@ export default function Home() {
     <div className={`h-screen w-full ${theme.bg} ${theme.text} relative overflow-hidden transition-colors duration-500`}>
       
       {/* HEADER BLOCK */}
-      <div className="absolute top-3 md:top-6 left-1/2 -translate-x-1/2 z-[1000] w-[calc(100%-1.5rem)] max-w-[1400px] flex flex-col md:flex-row gap-2 md:gap-3">
+      <div className="absolute top-3 md:top-6 left-1/2 -translate-x-1/2 z-[1000] w-[calc(100%-1.5rem)] max-w-[1400px] flex flex-col md:flex-row gap-2 md:gap-3 dety-fade-up">
         
         <div className={`${theme.panel} backdrop-blur-2xl border p-2.5 pr-6 rounded-[30px] ${isDark ? 'shadow-2xl' : 'shadow-[0_14px_40px_rgba(44,62,50,0.12)] ring-1 ring-white/70'} flex items-center gap-4 shrink-0`}>
           <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl overflow-hidden p-2 flex items-center justify-center ${isDark ? 'bg-white shadow-lg shadow-yellow-400/10' : 'bg-[#fbfaf4] ring-1 ring-amber-200/80 shadow-[0_5px_16px_rgba(190,150,50,0.16)]'}`}>
@@ -207,7 +207,7 @@ export default function Home() {
         <div
           role="presentation"
           onMouseDown={(event) => { if (event.target === event.currentTarget) setIsAboutOpen(false); }}
-          className={`fixed inset-0 z-[2000] flex items-center justify-center p-4 md:p-6 ${isDark ? 'bg-slate-950/60' : 'bg-slate-900/25'} backdrop-blur-xl animate-in fade-in duration-300`}
+          className={`fixed inset-0 z-[2000] flex items-center justify-center p-4 md:p-6 ${isDark ? 'bg-slate-950/60' : 'bg-slate-900/25'} backdrop-blur-xl dety-fade-in`}
         >
           <div role="dialog" aria-modal="true" aria-labelledby="about-title" className={`${isDark ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200'} border rounded-[36px] md:rounded-[60px] p-6 md:p-14 max-w-4xl w-full relative shadow-2xl overflow-y-auto max-h-[90vh] custom-scrollbar`}>
             
@@ -303,7 +303,7 @@ export default function Home() {
       </div>
 
       {/* BOTTOM CONTROLS */}
-      <div className="absolute bottom-5 right-4 md:bottom-8 md:right-8 z-[1000] flex flex-col items-end gap-3 md:gap-4">
+      <div className="absolute bottom-5 right-4 md:bottom-8 md:right-8 z-[1000] flex flex-col items-end gap-3 md:gap-4 dety-fade-up" style={{ animationDelay: '180ms' }}>
         <button aria-label="Показати моє місцезнаходження" onClick={findMe} className="bg-white text-black w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-2xl active:scale-90 transition-all hover:bg-yellow-400 group" title="Де я?">
           <Navigation size={22} fill="currentColor" className="group-hover:rotate-12 transition-transform" />
         </button>
