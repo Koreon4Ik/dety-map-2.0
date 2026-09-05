@@ -1,4 +1,4 @@
-export default {
+const location = {
   name: 'location',
   title: 'Локація',
   type: 'document',
@@ -7,21 +7,21 @@ export default {
       name: 'title',
       title: 'Назва',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: { required: () => unknown }) => Rule.required(),
     },
     {
       name: 'slug',
       title: 'Slug (URL)',
       type: 'slug',
       options: { source: 'title' },
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: { required: () => unknown }) => Rule.required(),
     },
     {
   name: 'category',
   title: 'Категорія',
   type: 'reference',
   to: [{ type: 'category' }],
-  validation: (Rule: any) => Rule.required(),
+  validation: (Rule: { required: () => unknown }) => Rule.required(),
 },
     // --- НОВІ ПОЛЯ ---
     {
@@ -59,3 +59,5 @@ export default {
 }
   ],
 }
+
+export default location

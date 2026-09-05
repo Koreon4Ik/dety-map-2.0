@@ -1,13 +1,7 @@
-import { createClient } from 'next-sanity';
 import { MapPin, Globe, ArrowLeft, AlignLeft } from 'lucide-react';
 import Link from 'next/link';
-
-const client = createClient({
-  projectId: '5tbxcnx4',
-  dataset: 'production',
-  apiVersion: '2024-03-03',
-  useCdn: false,
-});
+import Image from 'next/image';
+import { client } from '@/sanity/lib/client';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -30,7 +24,7 @@ export default async function LocationPage(props: { params: Promise<{ slug: stri
   if (!location) {
     return (
       <div className="h-screen bg-slate-950 text-white flex flex-col items-center justify-center space-y-6 font-black italic uppercase tracking-tighter">
-        <h1 className="text-3xl text-center px-4">Локацію "{slug}" <br/>не знайдено</h1>
+        <h1 className="text-3xl text-center px-4">Локацію &quot;{slug}&quot; <br/>не знайдено</h1>
         <Link href="/" className="px-6 py-2 bg-yellow-400 text-black not-italic text-xs rounded-full hover:bg-white transition-colors">
           Повернутися до мапи
         </Link>
@@ -62,10 +56,12 @@ export default async function LocationPage(props: { params: Promise<{ slug: stri
 
         {location.imageUrl && (
           <div className="w-full aspect-video rounded-[40px] overflow-hidden border border-white/10 shadow-2xl">
-            <img 
-              src={location.imageUrl} 
-              alt={location.title} 
-              className="w-full h-full object-cover"
+            <Image
+              src={location.imageUrl}
+              alt={location.title}
+              fill
+              sizes="(max-width: 768px) 100vw, 896px"
+              className="object-cover"
             />
           </div>
         )}

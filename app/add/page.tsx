@@ -1,19 +1,12 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { createClient } from 'next-sanity';
+import { client } from '@/sanity/lib/client';
 import { 
   Tag, ChevronDown, MapPin, Type, AlignLeft, Globe, CheckCircle2, 
   Navigation, AlertCircle, ArrowLeft, Send, Plus
 } from 'lucide-react';
 import Link from 'next/link';
-
-const client = createClient({
-  projectId: '5tbxcnx4',
-  dataset: 'production',
-  apiVersion: '2024-03-03',
-  useCdn: false,
-});
 
 export default function AddLocation() {
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -102,7 +95,7 @@ export default function AddLocation() {
       } else {
         setStatus('error');
       }
-    } catch (err) {
+    } catch {
       setStatus('error');
     } finally {
       setLoading(false);
@@ -117,7 +110,7 @@ export default function AddLocation() {
             <CheckCircle2 size={48} className="text-black" />
           </div>
           <h2 className="text-3xl font-black uppercase italic text-white">Дякуємо!</h2>
-          <p className="text-slate-400 font-bold max-w-sm mx-auto">Ваша пропозиція відправлена на модерацію. Скоро вона з'явиться на мапі.</p>
+          <p className="text-slate-400 font-bold max-w-sm mx-auto">Ваша пропозиція відправлена на модерацію. Скоро вона з&apos;явиться на мапі.</p>
           <div className="flex flex-col items-center gap-4">
             <button
               type="button"
@@ -146,7 +139,7 @@ export default function AddLocation() {
             <h1 className="text-3xl md:text-4xl font-black italic uppercase tracking-tighter leading-none">
               Додати <span className="text-yellow-400">локацію</span>
             </h1>
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">Твоя пропозиція з'явиться після модерації</p>
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">Твоя пропозиція з&apos;явиться після модерації</p>
           </div>
         </div>
 

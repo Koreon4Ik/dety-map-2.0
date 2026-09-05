@@ -18,14 +18,31 @@ function MapController({ center, zoom }: { center: [number, number] | null, zoom
   return null;
 }
 
-export default function Map({ locations = [], center, zoom, isDark = true }: any) {
+type MapLocation = {
+  _id: string;
+  title: string;
+  slug?: string;
+  category?: string;
+  categoryColor?: string;
+  coordinates?: { lat?: number; lng?: number };
+};
+
+type MapProps = {
+  locations?: MapLocation[];
+  center?: [number, number] | null;
+  zoom: number;
+  isDark?: boolean;
+  userLocation?: [number, number] | null;
+};
+
+export default function Map({ locations = [], center, zoom, isDark = true, userLocation = null }: MapProps) {
   const router = useRouter();
 
   // Отримуємо API ключ із змінних оточення (збережених у Vercel)
   const cartoApiKey = process.env.NEXT_PUBLIC_CARTO_API_KEY || '';
   
   // Кастомна іконка для локацій
-  const createCustomIcon = (category: string, categoryColor?: string) => {
+  const createCustomIcon = (category?: string, categoryColor?: string) => {
     const colors: Record<string, string> = { 
       'МЦ': '#fbbf24',
       'NGO': '#34d399',
@@ -37,7 +54,7 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
       'ІНШЕ': '#94a3b8' 
     };
 
-    const color = categoryColor || colors[category?.toUpperCase()] || colors['ІНШЕ'];
+    const color = categoryColor || colors[category ? category.toUpperCase() : ''] || colors['ІНШЕ'];
     const borderColor = isDark ? '#0f172a' : '#ffffff';
 
     return L.divIcon({
@@ -82,7 +99,7 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
         scrollWheelZoom={true}
         style={{ height: '100%', width: '100%', background: isDark ? '#020617' : '#f8fafc', zIndex: 0 }}
       >
-        <MapController center={center} zoom={zoom} />
+        <MapController center={center ?? null} zoom={zoom} />
         
         <TileLayer 
           url={tileUrl}
@@ -92,8 +109,8 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
         <ZoomControl position="bottomleft" />
 
         {/* Маркер користувача (якщо активована геолокація) */}
-        {center && center[1] !== 31.1656 && (
-          <Marker position={center} icon={userIcon} zIndexOffset={1000} />
+        {userLocation && (
+          <Marker position={userLocation} icon={userIcon} zIndexOffset={1000} />
         )}
 
         {/* Маркери локацій із Sanity */}
@@ -104,8 +121,8 @@ export default function Map({ locations = [], center, zoom, isDark = true }: any
           maxClusterRadius={70}
           iconCreateFunction={createClusterIcon}
         >
-          {locations.map((loc: any) => {
-            if (!loc.coordinates?.lat || !loc.coordinates?.lng) return null;
+          {locations.map((loc) => {
+            if (typeof loc.coordinates?.lat !== 'number' || typeof loc.coordinates?.lng !== 'number') return null;
 
             return (
               <Marker
