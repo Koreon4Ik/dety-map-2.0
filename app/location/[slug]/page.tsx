@@ -63,7 +63,7 @@ export default async function LocationPage(props: { params: Promise<{ slug: stri
         />
 
         {location.imageUrl && (
-          <div className="w-full aspect-video rounded-[40px] overflow-hidden border border-white/10 shadow-2xl">
+          <div className="relative w-full aspect-video rounded-[40px] overflow-hidden border border-white/10 shadow-2xl">
             <Image
               src={location.imageUrl}
               alt={location.title}
