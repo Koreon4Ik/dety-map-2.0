@@ -19,6 +19,7 @@ export default function AddLocation() {
   
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitError, setSubmitError] = useState('');
 
   const [formData, setFormData] = useState({
     title: '',
@@ -64,6 +65,7 @@ export default function AddLocation() {
     setSelectedCat(null);
     setIsCustomCategory(false);
     setProposedCategory('');
+    setSubmitError('');
     setStatus('idle');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -101,9 +103,12 @@ export default function AddLocation() {
       if (res.ok) {
         setStatus('success');
       } else {
+        const result: { message?: string } = await res.json();
+        setSubmitError(result.message || 'Не вдалося відправити пропозицію. Перевірте заповнені поля.');
         setStatus('error');
       }
     } catch {
+      setSubmitError('Не вдалося зв’язатися із сервером. Спробуйте пізніше.');
       setStatus('error');
     } finally {
       setLoading(false);
@@ -277,7 +282,7 @@ export default function AddLocation() {
           {/* Помилка */}
           {status === 'error' && (
             <div className="md:col-span-2 flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500 text-xs font-bold uppercase">
-              <AlertCircle size={16} /> Помилка при відправці. Спробуйте пізніше.
+              <AlertCircle size={16} /> {submitError}
             </div>
           )}
 

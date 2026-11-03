@@ -26,24 +26,32 @@ export async function POST(req: Request) {
   const normalizedProposedCategory = typeof proposedCategory === 'string' ? proposedCategory.trim() : '';
   const latitude = typeof lat === 'number' ? lat : typeof lat === 'string' && lat.trim() ? Number(lat) : NaN;
   const longitude = typeof lng === 'number' ? lng : typeof lng === 'string' && lng.trim() ? Number(lng) : NaN;
+  const validationErrors: string[] = [];
 
-  if (
-    !normalizedTitle ||
-    !normalizedAddress ||
-    !normalizedDescription ||
-    !Number.isFinite(latitude) ||
-    latitude < -90 ||
-    latitude > 90 ||
-    !Number.isFinite(longitude) ||
-    longitude < -180 ||
-    longitude > 180 ||
-    (link !== undefined && typeof link !== 'string') ||
-    (categoryId !== undefined && typeof categoryId !== 'string') ||
-    (proposedCategory !== undefined && typeof proposedCategory !== 'string') ||
-    (normalizedProposedCategory.length > 80) ||
-    (Boolean(normalizedCategoryId) === Boolean(normalizedProposedCategory))
-  ) {
-    return NextResponse.json({ message: 'Перевірте заповнені поля та категорію.' }, { status: 400 });
+  if (!normalizedTitle) validationErrors.push('вкажіть назву локації');
+  if (!normalizedAddress) validationErrors.push('вкажіть адресу');
+  if (!normalizedDescription) validationErrors.push('додайте опис');
+  if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90) {
+    validationErrors.push('перевірте широту: число має бути від -90 до 90');
+  }
+  if (!Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
+    validationErrors.push('перевірте довготу: число має бути від -180 до 180');
+  }
+  if (link !== undefined && typeof link !== 'string') validationErrors.push('перевірте посилання');
+  if (categoryId !== undefined && typeof categoryId !== 'string') validationErrors.push('оберіть коректну категорію');
+  if (proposedCategory !== undefined && typeof proposedCategory !== 'string') {
+    validationErrors.push('введіть коректну назву власної категорії');
+  }
+  if (normalizedProposedCategory.length > 80) validationErrors.push('назва власної категорії має бути не довша за 80 символів');
+  if (Boolean(normalizedCategoryId) === Boolean(normalizedProposedCategory)) {
+    validationErrors.push('оберіть одну категорію зі списку або введіть власну');
+  }
+
+  if (validationErrors.length > 0) {
+    return NextResponse.json(
+      { message: `Перевірте дані: ${validationErrors.join('; ')}.` },
+      { status: 400 }
+    );
   }
 
   try {
