@@ -79,15 +79,18 @@ export default function Home() {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const isDark = useSyncExternalStore(subscribeToTheme, getThemeSnapshot, getServerThemeSnapshot);
   const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState(false);
+  const [loadError, setLoadError] = useState('');
   
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Завантаження даних із Sanity
   useEffect(() => {
     const fetchData = async () => {
+      let loadingStep = 'категорії';
+
       try {
         const catData = await client.fetch<Category[]>(CATEGORIES_QUERY);
+        loadingStep = 'локації';
         const locData = (await client.fetch<Location[]>(LOCATIONS_QUERY)).map((location) => ({
           ...location,
           category: location.category || location.proposedCategory
@@ -99,8 +102,9 @@ export default function Home() {
         ]);
         setCategories(['УСІ', ...categoryTitles]);
       } catch (err) {
-        console.error("Помилка завантаження:", err);
-        setLoadError(true);
+        const detail = err instanceof Error ? err.message : String(err);
+        console.error(`Помилка завантаження: ${loadingStep}`, err);
+        setLoadError(`Не вдалося завантажити ${loadingStep}. ${detail}`);
       } finally {
         setIsLoading(false);
       }
@@ -316,7 +320,7 @@ export default function Home() {
       {/* MAP SECTION */}
       <div className="h-full w-full relative z-[1]">
         {isLoading && <div className="absolute top-1/2 left-1/2 z-[500] -translate-x-1/2 -translate-y-1/2 rounded-full bg-slate-950/80 px-5 py-3 text-xs font-black uppercase tracking-widest text-yellow-400 backdrop-blur-md">Завантаження локацій...</div>}
-        {loadError && <div className="absolute top-1/2 left-1/2 z-[500] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-red-950/90 px-5 py-3 text-center text-xs font-bold text-red-100 shadow-xl">Не вдалося завантажити локації</div>}
+        {loadError && <div className="absolute top-1/2 left-1/2 z-[500] max-w-[min(90vw,36rem)] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-red-950/90 px-5 py-3 text-center text-xs font-bold text-red-100 shadow-xl">{loadError}</div>}
         {!isLoading && !loadError && filteredLocations.length === 0 && <div className="absolute top-1/2 left-1/2 z-[500] -translate-x-1/2 -translate-y-1/2 rounded-full bg-slate-950/80 px-5 py-3 text-xs font-black uppercase tracking-widest text-white backdrop-blur-md">Локацій не знайдено</div>}
         <MapCustom 
           locations={filteredLocations} 
