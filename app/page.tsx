@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -39,6 +39,31 @@ const LOCATIONS_QUERY = defineQuery(`*[_type == "location" && isApproved == true
   coordinates
 }`);
 
+const THEME_STORAGE_KEY = 'dety-theme';
+const THEME_CHANGE_EVENT = 'dety-theme-change';
+
+function subscribeToTheme(onChange: () => void) {
+  window.addEventListener(THEME_CHANGE_EVENT, onChange);
+  window.addEventListener('storage', onChange);
+  return () => {
+    window.removeEventListener(THEME_CHANGE_EVENT, onChange);
+    window.removeEventListener('storage', onChange);
+  };
+}
+
+function getThemeSnapshot() {
+  return window.localStorage.getItem(THEME_STORAGE_KEY) !== 'light';
+}
+
+function getServerThemeSnapshot() {
+  return true;
+}
+
+function setTheme(isDark: boolean) {
+  window.localStorage.setItem(THEME_STORAGE_KEY, isDark ? 'dark' : 'light');
+  window.dispatchEvent(new Event(THEME_CHANGE_EVENT));
+}
+
 export default function Home() {
   const UKRAINE_CENTER: [number, number] = [48.3794, 31.1656];
   
@@ -50,10 +75,7 @@ export default function Home() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [mapConfig, setMapConfig] = useState({ center: UKRAINE_CENTER, zoom: 6 });
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    return window.localStorage.getItem('dety-theme') !== 'light';
-  });
+  const isDark = useSyncExternalStore(subscribeToTheme, getThemeSnapshot, getServerThemeSnapshot);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   
@@ -97,10 +119,6 @@ export default function Home() {
       document.removeEventListener('keydown', handleEscape);
     };
   }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem('dety-theme', isDark ? 'dark' : 'light');
-  }, [isDark]);
 
   const findMe = () => {
     if (!navigator.geolocation) return alert("Геолокація не підтримується");
@@ -149,7 +167,7 @@ export default function Home() {
             </h1>
             <div className="flex items-center gap-3 mt-1">
               <button onClick={() => setIsAboutOpen(true)} className="text-yellow-500 text-[10px] font-black uppercase tracking-widest hover:opacity-70 transition-opacity">Про проєкт</button>
-              <button onClick={() => setIsDark(!isDark)} className="p-1 rounded-full opacity-50 hover:opacity-100 transition-all">
+              <button onClick={() => setTheme(!isDark)} className="p-1 rounded-full opacity-50 hover:opacity-100 transition-all">
                 {isDark ? <Sun size={14} /> : <Moon size={14} />}
               </button>
             </div>
