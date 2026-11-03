@@ -17,11 +17,15 @@ export default async function LocationPage(props: { params: Promise<{ slug: stri
     link,
     coordinates,
     "imageUrl": image.asset->url,
-    "categoryName": coalesce(category->title, proposedCategory),
+    "categoryName": category->title,
+    proposedCategory,
     "categoryColor": category->color
   }`;
 
-  const location = await client.fetch(query, { slug });
+  const fetchedLocation = await client.fetch(query, { slug });
+  const location = fetchedLocation
+    ? { ...fetchedLocation, categoryName: fetchedLocation.categoryName || fetchedLocation.proposedCategory }
+    : null;
 
   if (!location) {
     return (

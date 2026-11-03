@@ -23,6 +23,7 @@ type Location = {
   title: string;
   slug?: string;
   category?: string;
+  proposedCategory?: string;
   categoryColor?: string;
   address?: string;
   coordinates?: { lat?: number; lng?: number };
@@ -33,7 +34,8 @@ const LOCATIONS_QUERY = defineQuery(`*[_type == "location" && isApproved == true
   _id,
   title,
   "slug": slug.current,
-  "category": coalesce(category->title, proposedCategory),
+  "category": category->title,
+  proposedCategory,
   "categoryColor": category->color,
   address,
   coordinates
@@ -86,7 +88,10 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const catData = await client.fetch<Category[]>(CATEGORIES_QUERY);
-        const locData = await client.fetch<Location[]>(LOCATIONS_QUERY);
+        const locData = (await client.fetch<Location[]>(LOCATIONS_QUERY)).map((location) => ({
+          ...location,
+          category: location.category || location.proposedCategory
+        }));
         setLocations(locData);
         const categoryTitles = new Set([
           ...catData.map((category) => category.title),
