@@ -17,12 +17,18 @@ const location = {
       validation: (Rule: { required: () => unknown }) => Rule.required(),
     },
     {
-  name: 'category',
-  title: 'Категорія',
-  type: 'reference',
-  to: [{ type: 'category' }],
-  validation: (Rule: { required: () => unknown }) => Rule.required(),
-},
+      name: 'category',
+      title: 'Категорія',
+      type: 'reference',
+      to: [{ type: 'category' }],
+    },
+    {
+      name: 'proposedCategory',
+      title: 'Запропонована категорія (від користувача)',
+      type: 'string',
+      description: 'Категорію запропонував користувач; перевірте її перед схваленням локації.',
+      validation: (Rule: { max: (length: number) => unknown }) => Rule.max(80),
+    },
     // --- НОВІ ПОЛЯ ---
     {
       name: 'image',
@@ -52,12 +58,26 @@ const location = {
       type: 'geopoint',
     },
     {
-  name: 'isApproved',
-  title: 'Опубліковано на мапі',
-  type: 'boolean',
-  initialValue: false, // Нові мітки за замовчуванням "вимкнені"
-}
+      name: 'isApproved',
+      title: 'Опубліковано на мапі',
+      type: 'boolean',
+      initialValue: false,
+    }
   ],
+  preview: {
+    select: {
+      title: 'title',
+      proposedCategory: 'proposedCategory',
+    },
+    prepare({ title, proposedCategory }: { title?: string; proposedCategory?: string }) {
+      return {
+        title,
+        subtitle: proposedCategory
+          ? `Категорію запропонував користувач: ${proposedCategory}`
+          : undefined,
+      };
+    },
+  },
 }
 
 export default location

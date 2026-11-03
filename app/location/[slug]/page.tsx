@@ -17,7 +17,7 @@ export default async function LocationPage(props: { params: Promise<{ slug: stri
     link,
     coordinates,
     "imageUrl": image.asset->url,
-    "categoryName": category->title,
+    "categoryName": coalesce(category->title, proposedCategory),
     "categoryColor": category->color
   }`;
 

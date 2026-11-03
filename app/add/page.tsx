@@ -14,6 +14,8 @@ export default function AddLocation() {
   const [isCatOpen, setIsCatOpen] = useState(false);
   const [dbCategories, setDbCategories] = useState<{_id: string, title: string}[]>([]);
   const [selectedCat, setSelectedCat] = useState<{id: string, title: string} | null>(null);
+  const [isCustomCategory, setIsCustomCategory] = useState(false);
+  const [proposedCategory, setProposedCategory] = useState('');
   
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -60,6 +62,8 @@ export default function AddLocation() {
       link: ''
     });
     setSelectedCat(null);
+    setIsCustomCategory(false);
+    setProposedCategory('');
     setStatus('idle');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -77,7 +81,10 @@ export default function AddLocation() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedCat) return alert("Оберіть категоріue!");
+    const categoryName = proposedCategory.trim();
+    if (!selectedCat && (!isCustomCategory || !categoryName)) {
+      return alert("Оберіть категорію або введіть власну.");
+    }
     
     setLoading(true);
     try {
@@ -86,7 +93,8 @@ export default function AddLocation() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          categoryId: selectedCat.id
+          categoryId: selectedCat?.id,
+          proposedCategory: isCustomCategory ? categoryName : undefined
         }),
       });
 
@@ -155,8 +163,8 @@ export default function AddLocation() {
               onClick={() => setIsCatOpen(!isCatOpen)}
               className="w-full bg-white/5 border border-white/10 rounded-[24px] px-6 py-5 outline-none focus:border-yellow-400/50 transition-all font-bold text-left flex justify-between items-center group hover:bg-white/10"
             >
-              <span className={selectedCat ? "text-white" : "text-slate-500"}>
-                {selectedCat ? selectedCat.title : "Оберіть категорію..."}
+              <span className={selectedCat || isCustomCategory ? "text-white" : "text-slate-500"}>
+                {selectedCat?.title || (isCustomCategory ? proposedCategory.trim() || "Власна категорія" : "Оберіть категорію...")}
               </span>
               <ChevronDown size={18} className={`text-yellow-400 transition-transform duration-300 ${isCatOpen ? 'rotate-180' : ''}`} />
             </button>
@@ -168,7 +176,12 @@ export default function AddLocation() {
                     <button
                       key={cat._id}
                       type="button"
-                      onClick={() => { setSelectedCat({ id: cat._id, title: cat.title }); setIsCatOpen(false); }}
+                      onClick={() => {
+                        setSelectedCat({ id: cat._id, title: cat.title });
+                        setIsCustomCategory(false);
+                        setProposedCategory('');
+                        setIsCatOpen(false);
+                      }}
                       className={`w-full text-left px-5 py-4 rounded-2xl text-sm font-bold transition-all flex items-center justify-between group mb-1 ${
                         selectedCat?.id === cat._id ? 'bg-yellow-400 text-black' : 'hover:bg-white/5 text-white'
                       }`}
@@ -177,10 +190,43 @@ export default function AddLocation() {
                       {selectedCat?.id === cat._id && <CheckCircle2 size={16} />}
                     </button>
                   )) : <div className="p-4 text-center text-slate-500 text-xs font-bold uppercase">Категорії не знайдені...</div>}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedCat(null);
+                      setIsCustomCategory(true);
+                      setIsCatOpen(false);
+                    }}
+                    className={`w-full text-left px-5 py-4 rounded-2xl text-sm font-bold transition-all flex items-center justify-between group ${
+                      isCustomCategory ? 'bg-yellow-400 text-black' : 'hover:bg-white/5 text-yellow-400'
+                    }`}
+                  >
+                    Запропонувати власну категорію
+                    <Plus size={16} />
+                  </button>
                 </div>
               </div>
             )}
           </div>
+
+          {isCustomCategory && (
+            <div className="md:col-span-2 space-y-2">
+              <label htmlFor="proposedCategory" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-4">
+                Ваша категорія
+              </label>
+              <input
+                autoFocus
+                id="proposedCategory"
+                required
+                maxLength={80}
+                value={proposedCategory}
+                onChange={(event) => setProposedCategory(event.target.value)}
+                placeholder="Наприклад: Простір настільних ігор"
+                className="w-full bg-white/5 border border-white/10 rounded-[24px] px-6 py-5 outline-none focus:border-yellow-400/50 transition-all font-bold placeholder:text-slate-700"
+              />
+              <p className="text-xs text-slate-500 ml-4">Ми передамо її адміністраторам на розгляд.</p>
+            </div>
+          )}
 
           {/* Назва */}
           <div className="md:col-span-2 space-y-2">

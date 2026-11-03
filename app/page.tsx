@@ -33,7 +33,7 @@ const LOCATIONS_QUERY = defineQuery(`*[_type == "location" && isApproved == true
   _id,
   title,
   "slug": slug.current,
-  "category": category->title,
+  "category": coalesce(category->title, proposedCategory),
   "categoryColor": category->color,
   address,
   coordinates
@@ -64,11 +64,13 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const catData = await client.fetch<Category[]>(CATEGORIES_QUERY);
-        const catList = ['УСІ', ...catData.map((category) => category.title)];
-        setCategories(catList);
-
         const locData = await client.fetch<Location[]>(LOCATIONS_QUERY);
         setLocations(locData);
+        const categoryTitles = new Set([
+          ...catData.map((category) => category.title),
+          ...locData.map((location) => location.category).filter((title): title is string => Boolean(title))
+        ]);
+        setCategories(['УСІ', ...categoryTitles]);
       } catch (err) {
         console.error("Помилка завантаження:", err);
         setLoadError(true);
